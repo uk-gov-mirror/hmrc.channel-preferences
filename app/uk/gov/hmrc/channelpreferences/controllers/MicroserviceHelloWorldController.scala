@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.channelpreferences.controllers
 
-import javax.inject.{Inject, Singleton}
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import javax.inject.{ Inject, Singleton }
+import play.api.mvc.{ Action, AnyContent, ControllerComponents }
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import uk.gov.hmrc.channelpreferences.config.AppConfig
 
