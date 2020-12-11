@@ -11,6 +11,12 @@ object AppDependencies {
     "uk.gov.hmrc"             %% "simple-reactivemongo"       % "7.31.0-play-27"
   )
 
+  // The fork of swagger-play requires a version of jackson-databind version >= 2.9.0 and < 2.10.0
+  // Other libraries pulling in later jackson-databind include http-verbs and logback-json-logger
+  val dependencyOverrides: Seq[ModuleID] = Seq(
+    "com.fasterxml.jackson.core"     % "jackson-databind"        % "2.9.9"
+  )
+
   val test = Seq(
     "uk.gov.hmrc"             %% "bootstrap-test-play-27"   % "3.2.0" % Test,
     "org.scalatest"           %% "scalatest"                % "3.2.3"  % Test,
