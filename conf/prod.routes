@@ -1,7 +1,7 @@
 # Add all the application routes to the app.routes file
 ->         /channel-preferences              app.Routes
-->         /                          health.Routes
-->         /releases-api/swagger/     swagger.Routes
+->         /                                 health.Routes
+->         /channel-preferences/swagger/     swagger.Routes
 
 
 GET        /admin/metrics             com.kenshoo.play.metrics.MetricsController.metrics
