@@ -7,6 +7,7 @@ object AppDependencies {
 
   val compile = Seq(
     "uk.gov.hmrc"             %% "bootstrap-backend-play-27"  % "3.2.0",
+    "com.iterable"            %% "swagger-play"               % "2.0.1",
     "uk.gov.hmrc"             %% "simple-reactivemongo"       % "7.31.0-play-27"
   )
 

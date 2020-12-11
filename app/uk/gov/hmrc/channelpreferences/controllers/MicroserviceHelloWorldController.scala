@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.channelpreferences.controllers
 
+import io.swagger.annotations.{ Api, ApiOperation }
 import javax.inject.{ Inject, Singleton }
 import play.api.mvc.{ Action, AnyContent, ControllerComponents }
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
@@ -23,11 +24,18 @@ import uk.gov.hmrc.channelpreferences.config.AppConfig
 
 import scala.concurrent.Future
 
+@Api
 @Singleton()
 class MicroserviceHelloWorldController @Inject()(appConfig: AppConfig, cc: ControllerComponents)
     extends BackendController(cc) {
 
-  def hello(): Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok("Hello world"))
-  }
+  @ApiOperation(
+    nickname = "hello",
+    value = "Say apps",
+    httpMethod = "GET"
+  )
+  def hello(): Action[AnyContent] =
+    Action.async { implicit request =>
+      Future.successful(Ok("Hello world"))
+    }
 }
