@@ -36,6 +36,6 @@ class MicroserviceHelloWorldController @Inject()(appConfig: AppConfig, cc: Contr
   )
   def hello(): Action[AnyContent] =
     Action.async { implicit request =>
-      Future.successful(Ok("Hello world"))
+      Future.successful(Ok(s"Hello world $request $appConfig"))
     }
 }
