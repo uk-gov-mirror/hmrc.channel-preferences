@@ -11,7 +11,7 @@ val appName = "channel-preferences"
 val silencerVersion = "1.7.0"
 
 lazy val microservice = Project(appName, file("."))
-  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
+  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SwaggerPlugin)
   .settings(
     majorVersion := 0,
     scalaVersion := "2.12.12",
@@ -125,3 +125,10 @@ dependencyUpdatesFilter -= moduleFilter(organization = "com.typesafe.play")
 dependencyUpdatesFilter -= moduleFilter(organization = "org.scalatestplus.play")
 
 sources in (Compile, doc) := Seq.empty
+
+swaggerDomainNameSpaces := Seq("uk.gov.hmrc.securemessage.models.api")
+swaggerTarget := baseDirectory.value / "public"
+swaggerFileName := "schema.json"
+swaggerPrettyJson := true
+swaggerRoutesFile := "prod.routes"
+swaggerV3 := true
