@@ -97,7 +97,6 @@ lazy val compileScalastyle = taskKey[Unit]("compileScalastyle")
 compileScalastyle := scalastyle.in(Compile).toTask("").value
 (compile in Compile) := ((compile in Compile) dependsOn compileScalastyle).value
 
-coverageEnabled := true
 wartremoverErrors in (Compile, compile) ++= Warts.all
 wartremoverExcluded ++= routes.in(Compile).value
 addCompilerPlugin("org.wartremover" %% "wartremover" % "2.4.13" cross CrossVersion.full)
@@ -113,7 +112,6 @@ lazy val silencerSettings: Seq[Setting[_]] = {
   )
 }
 
-coverageEnabled := true
 coverageMinimum := 100
 coverageFailOnMinimum := true
 coverageExcludedPackages := "<empty>;Reverse.*;.*(config|views.*);.*(AuthService|BuildInfo|Routes).*"
