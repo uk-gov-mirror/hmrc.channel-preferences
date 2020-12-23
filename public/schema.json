@@ -4,28 +4,84 @@
   },
   "openapi" : "3.0.3",
   "paths" : {
-    "/channel-preferences/hello-world" : {
-      "get" : {
-        "operationId" : "hello",
-        "tags" : [ "app" ]
-      }
-    },
     "/admin/metrics" : {
       "get" : {
         "operationId" : "metrics",
         "tags" : [ "prod" ]
+      }
+    },
+    "/{path}" : {
+      "patch" : {
+        "operationId" : "proxy",
+        "parameters" : [ {
+          "schema" : {
+            "type" : "string"
+          },
+          "in" : "path",
+          "name" : "path",
+          "required" : true
+        } ],
+        "tags" : [ "app" ]
+      },
+      "post" : {
+        "operationId" : "proxy",
+        "parameters" : [ {
+          "schema" : {
+            "type" : "string"
+          },
+          "in" : "path",
+          "name" : "path",
+          "required" : true
+        } ],
+        "tags" : [ "app" ]
+      },
+      "get" : {
+        "operationId" : "proxy",
+        "parameters" : [ {
+          "schema" : {
+            "type" : "string"
+          },
+          "in" : "path",
+          "name" : "path",
+          "required" : true
+        } ],
+        "tags" : [ "app" ]
+      },
+      "delete" : {
+        "operationId" : "proxy",
+        "parameters" : [ {
+          "schema" : {
+            "type" : "string"
+          },
+          "in" : "path",
+          "name" : "path",
+          "required" : true
+        } ],
+        "tags" : [ "app" ]
+      },
+      "put" : {
+        "operationId" : "proxy",
+        "parameters" : [ {
+          "schema" : {
+            "type" : "string"
+          },
+          "in" : "path",
+          "name" : "path",
+          "required" : true
+        } ],
+        "tags" : [ "app" ]
       }
     }
   },
   "produces" : [ "application/json" ],
   "info" : {
     "title" : "Secure Message API",
-    "version" : "0.6.0-SNAPSHOT"
+    "version" : "0.10.0-SNAPSHOT"
   },
   "consumes" : [ "application/json" ],
   "tags" : [ {
-    "name" : "app"
-  }, {
     "name" : "prod"
+  }, {
+    "name" : "app"
   } ]
 }

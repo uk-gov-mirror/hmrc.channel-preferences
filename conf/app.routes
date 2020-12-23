@@ -1,3 +1,7 @@
 # microservice specific routes
 
-GET        /hello-world             uk.gov.hmrc.channelpreferences.controllers.MicroserviceHelloWorldController.hello
+GET        /*path             @uk.gov.hmrc.channelpreferences.controllers.ProxyController.proxy(path: String)
+POST       /*path             @uk.gov.hmrc.channelpreferences.controllers.ProxyController.proxy(path: String)
+PUT        /*path             @uk.gov.hmrc.channelpreferences.controllers.ProxyController.proxy(path: String)
+PATCH      /*path             @uk.gov.hmrc.channelpreferences.controllers.ProxyController.proxy(path: String)
+DELETE     /*path             @uk.gov.hmrc.channelpreferences.controllers.ProxyController.proxy(path: String)
