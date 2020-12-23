@@ -21,6 +21,9 @@ object AppDependencies {
     "com.typesafe.play"      %% "play-test"                % current          % Test,
     "org.scalatestplus.play" %% "scalatestplus-play"       % "4.0.3"          % "test, it",
     "uk.gov.hmrc"            %% "service-integration-test" % "0.13.0-play-27" % "test, it",
-    "org.pegdown"            % "pegdown"                   % "1.6.0"          % "test, it"
+    "org.pegdown"            % "pegdown"                   % "1.6.0"          % "test, it",
+    "org.mockito"            % "mockito-core"              % "3.6.28"         % "test",
+    "com.github.tomakehurst" % "wiremock-jre8"             % "2.27.2"         % "test,it",
+    "org.mock-server"        % "mockserver-netty"          % "5.11.2"         % "it"
   )
 }

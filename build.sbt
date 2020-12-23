@@ -97,7 +97,7 @@ lazy val compileScalastyle = taskKey[Unit]("compileScalastyle")
 compileScalastyle := scalastyle.in(Compile).toTask("").value
 (compile in Compile) := ((compile in Compile) dependsOn compileScalastyle).value
 
-wartremoverErrors in (Compile, compile) ++= Warts.all
+wartremoverErrors in (Compile, compile) ++= Warts.allBut(Wart.Equals)
 wartremoverExcluded ++= routes.in(Compile).value
 addCompilerPlugin("org.wartremover" %% "wartremover" % "2.4.13" cross CrossVersion.full)
 bobbyRulesURL := Some(new URL("https://webstore.tax.service.gov.uk/bobby-config/deprecated-dependencies.json"))
