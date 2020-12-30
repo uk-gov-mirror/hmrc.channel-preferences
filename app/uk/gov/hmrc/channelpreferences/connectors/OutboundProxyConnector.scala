@@ -17,7 +17,7 @@
 package uk.gov.hmrc.channelpreferences.connectors
 
 import com.google.inject.name.Named
-import controllers.Assets.Status
+import controllers.Assets.{ InternalServerError, Status }
 import play.api.libs.ws.{ WSClient, WSRequest, WSResponse }
 import play.api.mvc._
 import play.api.{ Logger, LoggerLike }
@@ -38,17 +38,30 @@ class OutboundProxyConnector @Inject()(@Named("entityResolverUrl") entityResolve
         Seq[WSRequest => WSRequest](
           r => r.withMethod(req.method),
           r => r.withHttpHeaders(req.headers.headers: _*),
-          r => req.body.asBytes().fold(r)(r.withBody(_))))(ws.url(url))
+          r => req.body.asBytes().fold(r)(r.withBody(_)),
+          r => { log.warn(s"EPROXY: WSRequest $r"); r }
+        )
+      )(ws.url(url))
       .execute()
       .map {
-        case resp =>
+        case resp => {
+          log.warn(s"EPROXY: response $resp")
           Status(resp.status)(resp.body).withHeaders(headersFrom(resp): _*)
+        }
+      }
+      .recover {
+        case e => {
+          log.error("EPROXY failed to forward message" + e.getMessage)
+          InternalServerError
+        }
       }
 
   private def headersFrom(resp: WSResponse) = resp.headers.toIterator.flatMap { case (k, v) => v.map((k, _)) }.toSeq
 
   def proxy(inboundRequest: Request[RawBuffer]): Future[Result] = {
+    log.warn(s"EPROXY inbound request: $inboundRequest")
     val url = entityResolverHost + inboundRequest.uri
+    log.warn(s"EPROXY ENTITYRESOLVERURL: $url")
     forward(inboundRequest)(url)
   }
 

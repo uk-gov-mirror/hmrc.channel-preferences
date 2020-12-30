@@ -33,6 +33,7 @@ class ProxyController @Inject()(
 
   def proxy(path: String): Action[RawBuffer] =
     Action.async(controllerComponents.parsers.raw) { implicit request =>
+      log.warn(s"EPROXY CONTR: request $request")
       outboundConnector.proxy(request).recover {
         case ex: Exception =>
           log.error(s"An error occurred proxying $path", ex)
