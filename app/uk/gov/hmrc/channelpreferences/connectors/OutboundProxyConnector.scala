@@ -38,10 +38,7 @@ import scala.concurrent.{ ExecutionContext, Future }
 @Singleton
 class OutboundProxyConnector @Inject()(
   @Named("entityResolverUrl") entityResolverHost: String
-)(
-  implicit
-  system: ActorSystem,
-  executionContext: ExecutionContext) {
+)(implicit system: ActorSystem, executionContext: ExecutionContext) {
 
   import OutboundProxyConnector._
 
@@ -103,15 +100,41 @@ class OutboundProxyConnector @Inject()(
 
 object OutboundProxyConnector {
 
+  private val outboundHeaderBlackList =
+    Set(
+      CONNECTION,
+      CONTENT_LENGTH,
+      HOST,
+      PROXY_AUTHENTICATE,
+      PROXY_AUTHORIZATION,
+      TE,
+      TRANSFER_ENCODING,
+      TRAILER,
+      UPGRADE,
+      CONTENT_TYPE,
+      USER_AGENT
+    )
+
+  val outboundHeadersFilter: ((String, String)) => Boolean = {
+    case (key, _) => !outboundHeaderBlackList.contains(key)
+  }
+
   val loggedHeaderBlacklist: Set[String] = Set("Ocp-Apim-Subscription-Key", AUTHORIZATION)
 
   val loggedHeadersFilter: ((String, String)) => Boolean = {
     case (key, _) => !loggedHeaderBlacklist.contains(key)
   }
 
-  private def processInboundHeaders(inboundHeaders: Headers): Seq[RawHeader] =
-    flattenToSeq(inboundHeaders.toMap)
+  private def processInboundHeaders(inboundHeaders: Headers): Seq[RawHeader] = {
+    val filteredInboundHeaders: Seq[(String, String)] =
+      flattenToSeq(inboundHeaders.toMap).filter(outboundHeadersFilter)
+
+    filteredInboundHeaders
       .map({ case (name, value) => RawHeader(name, value) })
+  }
+
+  private def flattenToSeq(map: Map[String, Seq[String]]): Seq[(String, String)] =
+    map.toSeq.flatMap(entry => entry._2.map(value => (entry._1, value)))
 
   private def processResponseHeaders(headers: Seq[HttpHeader]): Map[String, String] =
     expandToMap(headers).filter(_._1 != CONTENT_TYPE)
@@ -121,9 +144,6 @@ object OutboundProxyConnector {
 
   private def loggedHeaders(headers: Seq[HttpHeader]): Map[String, String] =
     expandToMap(headers).filter(loggedHeadersFilter)
-
-  private def flattenToSeq(map: Map[String, Seq[String]]): Seq[(String, String)] =
-    map.toSeq.flatMap(entry => entry._2.map(value => (entry._1, value)))
 
   private def expandToMap(headers: Seq[HttpHeader]): Map[String, String] =
     headers.map(h => (h.name(), h.value())).groupBy(_._1).mapValues(_.map(_._2).mkString(","))
