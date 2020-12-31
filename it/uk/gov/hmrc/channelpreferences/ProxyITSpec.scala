@@ -197,7 +197,7 @@ class ProxyITSpec extends PlaySpec with BeforeAndAfterEach with BeforeAndAfterAl
 
       val result = Await.result(proxyController.proxy("/ping/ping")(fakeRequest).run(), 60.seconds)
 
-      result.header.headers("Server") shouldBe "Tomcat"
+      result.header.headers("Server") shouldBe "Apache,Tomcat"
 
       Await.result(application.stop(), 60.seconds)
     }
