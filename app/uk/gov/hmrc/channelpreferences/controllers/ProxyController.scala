@@ -47,7 +47,7 @@ class ProxyController @Inject()(
     Action.async(streamedBodyParser) { implicit request =>
       populateMdc(request)
 
-      log.info(s"Inbound Request: ${request.method} ${request.uri}")
+      log.debug(s"Inbound Request: ${request.method} ${request.uri}")
 
       outboundConnector.proxy(request).recover {
         case ex: Exception =>
