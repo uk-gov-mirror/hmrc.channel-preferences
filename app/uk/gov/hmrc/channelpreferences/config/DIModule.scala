@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,7 @@ import play.api.{ Configuration, Environment }
 
 class DIModule(environment: Environment, configuration: Configuration) extends AbstractModule {
 
-  override def configure(): Unit =
-    bindString(s"entityResolverUrl", "entityResolverUrl")
+  override def configure(): Unit = {}
 
   protected def bindString(path: String, name: String): Unit =
     bindConstant()

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,25 +22,28 @@ import akka.http.scaladsl.model._
 import akka.http.scaladsl.model.headers.RawHeader
 import akka.stream.scaladsl.Source
 import akka.util.ByteString
-import com.google.inject.name.Named
 import controllers.Assets.CONTENT_TYPE
 
 import javax.inject.{ Inject, Singleton }
 import play.api.http.HeaderNames._
 import play.api.http.HttpEntity.Streamed
 import play.api.mvc._
-import play.api.{ Logger, LoggerLike }
+import play.api.{ Configuration, Logger, LoggerLike }
+import uk.gov.hmrc.play.bootstrap.config.{ ServicesConfig }
 import uk.gov.hmrc.play.http.logging.Mdc.preservingMdc
 
 import scala.concurrent.{ ExecutionContext, Future }
 
 @SuppressWarnings(Array("org.wartremover.warts.ImplicitParameter"))
 @Singleton
-class OutboundProxyConnector @Inject()(
-  @Named("entityResolverUrl") entityResolverHost: String
-)(implicit system: ActorSystem, executionContext: ExecutionContext) {
+class OutboundProxyConnector @Inject()(config: Configuration)(
+  implicit system: ActorSystem,
+  executionContext: ExecutionContext)
+    extends ServicesConfig(config) {
 
   import OutboundProxyConnector._
+
+  val serviceUrl: String = baseUrl("entity-resolver")
 
   val log: LoggerLike = Logger(this.getClass)
 
@@ -69,7 +72,7 @@ class OutboundProxyConnector @Inject()(
   }
 
   private def buildOutboundRequest(inboundRequest: Request[Source[ByteString, _]]): HttpRequest = {
-    val uri = Uri(entityResolverHost + inboundRequest.uri)
+    val uri = Uri(serviceUrl + inboundRequest.uri)
     val headers = processInboundHeaders(inboundRequest.headers)
     val method = HttpMethod.custom(inboundRequest.method)
     val contentType = inboundRequest.headers.toSimpleMap

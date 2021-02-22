@@ -1,4 +1,7 @@
 # Add all the application routes to the app.routes file
-->         /                                 health.Routes
+->         /channel-preferences                                app.Routes
+->         /                                                   health.Routes
+
+### NoDocs ###
 GET        /admin/metrics             com.kenshoo.play.metrics.MetricsController.metrics
-->         /                                app.Routes
+
