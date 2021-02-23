@@ -51,7 +51,9 @@ class ProxyITSpec extends PlaySpec with BeforeAndAfterEach with BeforeAndAfterAl
 
   trait Setup {
     val application = new GuiceApplicationBuilder()
-      .configure("entityResolverUrl" -> mockServerHttpUrl)
+      .configure("microservice.services.entity-resolver.host" -> "localhost")
+      .configure("microservice.services.entity-resolver.protocol" -> "http")
+      .configure("microservice.services.entity-resolver.port" -> mockServer.port)
       .configure("metrics.enabled" -> false)
       .build()
 

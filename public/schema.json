@@ -4,13 +4,56 @@
   },
   "openapi" : "3.0.3",
   "paths" : {
-    "/admin/metrics" : {
+    "/channel-preferences/preference/{channel}" : {
       "get" : {
-        "operationId" : "metrics",
-        "tags" : [ "prod" ]
+        "operationId" : "preference",
+        "responses" : {
+          "200" : {
+            "description" : "an email was found for the taxIdValue"
+          },
+          "404" : {
+            "description" : "conversation not found"
+          },
+          "501" : {
+            "description" : "if the channel is not email, enrolmentKey not HMRC-CUS-ORG, taxIdName not EORINumber"
+          },
+          "502" : {
+            "description" : "map all upstream error codes to 502"
+          }
+        },
+        "parameters" : [ {
+          "schema" : {
+            "type" : "channel"
+          },
+          "in" : "path",
+          "name" : "channel",
+          "required" : true
+        }, {
+          "schema" : {
+            "type" : "string"
+          },
+          "in" : "query",
+          "name" : "enrolmentKey",
+          "required" : true
+        }, {
+          "schema" : {
+            "type" : "string"
+          },
+          "in" : "query",
+          "name" : "taxIdName",
+          "required" : true
+        }, {
+          "schema" : {
+            "type" : "string"
+          },
+          "in" : "query",
+          "name" : "taxIdValue",
+          "required" : true
+        } ],
+        "tags" : [ "app" ]
       }
     },
-    "/{path}" : {
+    "/channel-preferences/{path}" : {
       "patch" : {
         "operationId" : "proxy",
         "parameters" : [ {
@@ -75,13 +118,11 @@
   },
   "produces" : [ "application/json" ],
   "info" : {
-    "title" : "Secure Message API",
-    "version" : "0.10.0-SNAPSHOT"
+    "title" : "Channel Preferences API",
+    "version" : "0.14.0-SNAPSHOT"
   },
   "consumes" : [ "application/json" ],
   "tags" : [ {
-    "name" : "prod"
-  }, {
     "name" : "app"
   } ]
 }

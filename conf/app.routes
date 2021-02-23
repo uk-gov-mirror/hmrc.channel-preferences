@@ -1,5 +1,19 @@
 # microservice specific routes
 
+
+###
+# responses:
+#   200:
+#     description: an email was found for the taxIdValue
+#   404:
+#     description: conversation not found
+#   501:
+#     description: if the channel is not email, enrolmentKey not HMRC-CUS-ORG, taxIdName not EORINumber
+#   502:
+#     description: map all upstream error codes to 502
+###
+GET        /preference/:channel uk.gov.hmrc.channelpreferences.controllers.PreferenceController.preference(channel: Channel, enrolmentKey: String, taxIdName: String, taxIdValue: String)
+
 GET        /*path             @uk.gov.hmrc.channelpreferences.controllers.ProxyController.proxy(path: String)
 POST       /*path             @uk.gov.hmrc.channelpreferences.controllers.ProxyController.proxy(path: String)
 PUT        /*path             @uk.gov.hmrc.channelpreferences.controllers.ProxyController.proxy(path: String)

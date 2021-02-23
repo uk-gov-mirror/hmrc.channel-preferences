@@ -5,6 +5,7 @@ import uk.gov.hmrc.SbtBobbyPlugin.BobbyKeys.bobbyRulesURL
 import uk.gov.hmrc.ServiceManagerPlugin.Keys.itDependenciesList
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 import uk.gov.hmrc.{ ExternalService, ServiceManagerPlugin }
+import play.sbt.routes.RoutesKeys
 
 val appName = "channel-preferences"
 
@@ -17,6 +18,8 @@ lazy val microservice = Project(appName, file("."))
     scalaVersion := "2.12.12",
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
     dependencyOverrides ++= AppDependencies.dependencyOverrides,
+    RoutesKeys.routesImport += "uk.gov.hmrc.channelpreferences.ChannelBinder._",
+    RoutesKeys.routesImport += "uk.gov.hmrc.channelpreferences.hub.cds.model._",
     // ***************
     // Use the silencer plugin to suppress warnings
     scalacOptions ++= Seq(
@@ -102,7 +105,7 @@ wartremoverExcluded ++= routes.in(Compile).value
 addCompilerPlugin("org.wartremover" %% "wartremover" % "2.4.13" cross CrossVersion.full)
 bobbyRulesURL := Some(new URL("https://webstore.tax.service.gov.uk/bobby-config/deprecated-dependencies.json"))
 scalafmtOnCompile := true
-PlayKeys.playDefaultPort := 9051
+PlayKeys.playDefaultPort := 9052
 
 lazy val silencerSettings: Seq[Setting[_]] = {
   val silencerVersion = "1.7.0"
@@ -115,6 +118,7 @@ lazy val silencerSettings: Seq[Setting[_]] = {
 coverageExcludedPackages := "<empty>;Reverse.*;.*(config|views.*);.*(AuthService|BuildInfo|Routes).*"
 dependencyUpdatesFailBuild := true
 (compile in Compile) := ((compile in Compile) dependsOn dependencyUpdates).value
+dependencyUpdatesFilter -= moduleFilter(organization = "uk.gov.hmrc")
 dependencyUpdatesFilter -= moduleFilter(organization = "org.scala-lang")
 dependencyUpdatesFilter -= moduleFilter(organization = "com.github.ghik")
 dependencyUpdatesFilter -= moduleFilter(organization = "com.typesafe.play")
@@ -122,7 +126,7 @@ dependencyUpdatesFilter -= moduleFilter(organization = "org.scalatestplus.play")
 
 sources in (Compile, doc) := Seq.empty
 
-swaggerDomainNameSpaces := Seq("uk.gov.hmrc.securemessage.models.api")
+swaggerDomainNameSpaces := Seq("uk.gov.hmrc.channelpreferences.controllers.models.generic")
 swaggerTarget := baseDirectory.value / "public"
 swaggerFileName := "schema.json"
 swaggerPrettyJson := true
