@@ -53,7 +53,7 @@
         "tags" : [ "app" ]
       }
     },
-    "/channel-preferences/{path}" : {
+    "/{path}" : {
       "patch" : {
         "operationId" : "proxy",
         "parameters" : [ {
@@ -119,7 +119,7 @@
   "produces" : [ "application/json" ],
   "info" : {
     "title" : "Channel Preferences API",
-    "version" : "0.14.0-SNAPSHOT"
+    "version" : "0.15.0-SNAPSHOT"
   },
   "consumes" : [ "application/json" ],
   "tags" : [ {

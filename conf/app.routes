@@ -12,10 +12,10 @@
 #   502:
 #     description: map all upstream error codes to 502
 ###
-GET        /preference/:channel uk.gov.hmrc.channelpreferences.controllers.PreferenceController.preference(channel: Channel, enrolmentKey: String, taxIdName: String, taxIdValue: String)
+GET        /channel-preferences/preference/:channel     uk.gov.hmrc.channelpreferences.controllers.PreferenceController.preference(channel: Channel, enrolmentKey: String, taxIdName: String, taxIdValue: String)
 
-GET        /*path             @uk.gov.hmrc.channelpreferences.controllers.ProxyController.proxy(path: String)
-POST       /*path             @uk.gov.hmrc.channelpreferences.controllers.ProxyController.proxy(path: String)
-PUT        /*path             @uk.gov.hmrc.channelpreferences.controllers.ProxyController.proxy(path: String)
-PATCH      /*path             @uk.gov.hmrc.channelpreferences.controllers.ProxyController.proxy(path: String)
-DELETE     /*path             @uk.gov.hmrc.channelpreferences.controllers.ProxyController.proxy(path: String)
+GET        /*path                                       @uk.gov.hmrc.channelpreferences.controllers.ProxyController.proxy(path: String)
+POST       /*path                                       @uk.gov.hmrc.channelpreferences.controllers.ProxyController.proxy(path: String)
+PUT        /*path                                       @uk.gov.hmrc.channelpreferences.controllers.ProxyController.proxy(path: String)
+PATCH      /*path                                       @uk.gov.hmrc.channelpreferences.controllers.ProxyController.proxy(path: String)
+DELETE     /*path                                       @uk.gov.hmrc.channelpreferences.controllers.ProxyController.proxy(path: String)
