@@ -15,7 +15,7 @@ Ensure you have service-manager python environment setup:
 
 `sm --stop CHANNEL_PREFERENCES`
 
-`sbt run "9052 -Dplay.http.router=testOnlyDoNotUseInAppConf.Routes"`
+`sbt "run 9052 -Dplay.http.router=testOnlyDoNotUseInAppConf.Routes"`
 
 ## Run the tests and sbt fmt before raising a PR
 
