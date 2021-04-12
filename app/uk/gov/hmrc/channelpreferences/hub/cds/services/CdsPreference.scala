@@ -16,30 +16,35 @@
 
 package uk.gov.hmrc.channelpreferences.hub.cds.services
 
+import cats.data.EitherT
 import com.google.inject.ImplementedBy
+import play.api.http.Status.NOT_IMPLEMENTED
+import play.api.{ Logger, LoggerLike }
 import uk.gov.hmrc.channelpreferences.connectors.CDSEmailConnector
 import uk.gov.hmrc.channelpreferences.hub.cds.model.{ Channel, Email, EmailVerification }
+import uk.gov.hmrc.channelpreferences.services.Auditing
 import uk.gov.hmrc.http.HeaderCarrier
-
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import javax.inject._
-import play.api.http.Status.{ NOT_IMPLEMENTED }
-import play.api.{ Logger, LoggerLike }
-import scala.concurrent.Future
+import scala.concurrent.{ ExecutionContext, Future }
 
 @SuppressWarnings(Array("org.wartremover.warts.ImplicitParameter"))
 @ImplementedBy(classOf[CdsPreferenceService])
 trait CdsPreference {
   def getPreference(c: Channel, enrolmentKey: String, taxIdName: String, taxIdValue: String)(
-    implicit hc: HeaderCarrier): Future[Either[Int, EmailVerification]]
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext): Future[Either[Int, EmailVerification]]
 }
 
 @SuppressWarnings(Array("org.wartremover.warts.All"))
-class CdsPreferenceService @Inject()(cdsEmailCon: CDSEmailConnector) extends CdsPreference {
+class CdsPreferenceService @Inject()(cdsEmailCon: CDSEmailConnector, override val auditConnector: AuditConnector)
+    extends CdsPreference with Auditing {
   private val log: LoggerLike = Logger(this.getClass)
   private val HMRC_CUS_ORG = "HMRC-CUS-ORG"
   private val EORINumber = "EORINumber"
   def getPreference(c: Channel, enrolmentKey: String, taxIdName: String, taxIdValue: String)(
-    implicit hc: HeaderCarrier): Future[Either[Int, EmailVerification]] =
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext): Future[Either[Int, EmailVerification]] =
     c match {
       case Email => emailPreference(enrolmentKey, taxIdName, taxIdValue)
       case _ =>
@@ -48,9 +53,13 @@ class CdsPreferenceService @Inject()(cdsEmailCon: CDSEmailConnector) extends Cds
     }
 
   private def emailPreference(enrolmentKey: String, taxIdName: String, taxIdValue: String)(
-    implicit hc: HeaderCarrier): Future[Either[Int, EmailVerification]] =
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext): Future[Either[Int, EmailVerification]] =
     (enrolmentKey, taxIdName) match {
-      case (HMRC_CUS_ORG, EORINumber) => cdsEmailCon.getVerifiedEmail(taxIdValue)
+      case (HMRC_CUS_ORG, EORINumber) =>
+        val emailVerification = EitherT(cdsEmailCon.getVerifiedEmail(taxIdValue))
+        emailVerification.map(email => auditRetrieveEmail(email.address))
+        emailVerification.value
       case _ =>
         log.error(s"($enrolmentKey,$taxIdName) not supported")
         Future.successful(Left(NOT_IMPLEMENTED))

@@ -30,7 +30,7 @@ import play.api.http.Status.{ BAD_GATEWAY, OK, SERVICE_UNAVAILABLE }
 import uk.gov.hmrc.emailaddress.EmailAddress
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ ExecutionContext, Future }
 
 @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
 class PreferenceControllerSpec extends PlaySpec with ScalaFutures with MockitoSugar {
@@ -45,7 +45,8 @@ class PreferenceControllerSpec extends PlaySpec with ScalaFutures with MockitoSu
       val controller = new PreferenceController(
         new CdsPreference {
           override def getPreference(c: Channel, enrolmentKey: String, taxIdName: String, taxIdValue: String)(
-            implicit hc: HeaderCarrier): Future[Either[Int, EmailVerification]] =
+            implicit hc: HeaderCarrier,
+            ec: ExecutionContext): Future[Either[Int, EmailVerification]] =
             Future.successful(Left(SERVICE_UNAVAILABLE))
         },
         Helpers.stubControllerComponents()
@@ -59,7 +60,8 @@ class PreferenceControllerSpec extends PlaySpec with ScalaFutures with MockitoSu
       val controller = new PreferenceController(
         new CdsPreference {
           override def getPreference(c: Channel, enrolmentKey: String, taxIdName: String, taxIdValue: String)(
-            implicit hc: HeaderCarrier): Future[Either[Int, EmailVerification]] =
+            implicit hc: HeaderCarrier,
+            ec: ExecutionContext): Future[Either[Int, EmailVerification]] =
             Future.successful(Right(emailVerification))
         },
         Helpers.stubControllerComponents()
