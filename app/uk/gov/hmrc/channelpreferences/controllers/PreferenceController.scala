@@ -20,9 +20,8 @@ import play.api.libs.json.Json
 import play.api.mvc.{ Action, AnyContent, ControllerComponents }
 import uk.gov.hmrc.channelpreferences.hub.cds.model.Channel
 import uk.gov.hmrc.channelpreferences.hub.cds.services.CdsPreference
-
 import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext }
+import scala.concurrent.ExecutionContext
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 @SuppressWarnings(Array("org.wartremover.warts.All"))
